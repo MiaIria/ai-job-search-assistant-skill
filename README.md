@@ -108,12 +108,31 @@ Step 2 使用三轴评分筛选公司（避免 LLM 凭"感觉"推荐）：
 
 ```
 ai-job-search-assistant-skill/
-├── SKILL.md          ← Skill 定义（5 步流水线完整实现）
-├── README.md         ← 本文件
-└── LICENSE           ← MIT
+├── SKILL.md                ← Skill 定义（5 步流水线完整实现）
+├── references/             ← 方法论、评分量表、调研框架、信息源标准
+├── scripts/                ← 公司名去重、匹配评分、来源校验辅助脚本
+├── README.md               ← 本文件
+└── LICENSE                 ← MIT
 ```
 
-> 这是纯 prompt 工程——没有代码依赖、没有后端服务、没有训练模型。所有逻辑都在 SKILL.md 中。
+> 这是以 prompt 工程为核心的 Skill。`references/` 用于沉淀方法论，`scripts/` 用于处理去重、评分、来源校验等确定性步骤。
+
+---
+
+## 🧰 辅助脚本
+
+这些脚本不会自动运行，由执行 Skill 的 agent 在合适步骤调用：
+
+```bash
+# 标准化并去重公司名单
+python scripts/normalize_companies.py companies.txt
+
+# 按 30/40/30 量表计算匹配分
+python scripts/score_fit.py --hard 24 --experience 32 --soft 21
+
+# 检查报告里是否包含可追溯来源链接
+python scripts/validate_sources.py report.md
+```
 
 ---
 
